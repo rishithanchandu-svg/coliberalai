@@ -4,7 +4,7 @@
 //export const DEMO_AUDIO_URL =
 //  "./lib/recording.mp3";
 
-export const audioURL = "/recordding.mp3";
+export const audioURL = "/recording.mp3";
 
 export const IMG = {
   heroBg:
