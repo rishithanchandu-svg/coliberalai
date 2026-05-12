@@ -1,0 +1,7 @@
+/* App-level overrides kept minimal; styling lives in index.css */
+.App {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    position: relative;
+}
