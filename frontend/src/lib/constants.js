@@ -2,7 +2,7 @@ export const CALENDLY_URL = "https://calendly.com/coliberalai/voice-demo";
 // Royalty-free sample audio used as the demo placeholder. Replace with a real
 // recording of the AI voice agent when available.
 export const DEMO_AUDIO_URL =
-  "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3";
+  "./lib/recording.mp3";
 
 export const IMG = {
   heroBg:
