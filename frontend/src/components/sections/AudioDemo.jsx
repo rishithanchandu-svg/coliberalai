@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, Pause } from "lucide-react";
-import { DEMO_AUDIO_URL } from "@/lib/constants";
+import { audioURL } from "@/lib/constants";
 
 const SCRIPT_LINES = [
   { who: "Caller", text: "Hi, I saw your coaching program online — wanted to learn more." },
@@ -137,7 +137,7 @@ export const AudioDemo = () => {
               ))}
             </div>
 
-            <audio ref={audioRef} src={DEMO_AUDIO_URL} preload="metadata" data-testid="audio-element" />
+            <audio ref={audioRef} src={audioURL} preload="metadata" data-testid="audio-element" />
           </div>
         </div>
       </div>
