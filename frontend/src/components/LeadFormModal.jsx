@@ -85,9 +85,20 @@ export const DemoModalProvider = ({ children }) => {
     if (!validate()) return;
     setStatus("submitting");
     try {
-      await axios.post(`${API}/leads`, form);
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbyBqsHodPum-UevUeBlgTmIfwZC4YES0Jb_P9FB5nkVahTT6xqG1bbH8rDbg1qcy89y/exec",
+        {
+          method:"POST",
+          body: JSON.stringify(form),
+        }
+      );
       setStatus("success");
-      toast.success("You're in — we'll be in touch within 1 business day.");
+      toast.success(
+        "You're in - we'l be in touch wihin 1-2 business days."
+      );
+      //await axios.post(`${API}/leads`, form);
+      //setStatus("success");
+      //toast.success("You're in — we'll be in touch within 1 business day.");
     } catch (err) {
       setStatus("idle");
       toast.error("Couldn't submit. Please try again.");
