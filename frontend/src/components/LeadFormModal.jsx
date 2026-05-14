@@ -80,32 +80,56 @@ export const DemoModalProvider = ({ children }) => {
   };
 
   const submit = async (evt) => {
-    evt?.preventDefault();
-    if (status === "submitting") return;
-    if (!validate()) return;
-    setStatus("submitting");
-    try {
-      await fetch(
-        "https://script.google.com/macros/s/AKfycbyBqsHodPum-UevUeBlgTmIfwZC4YES0Jb_P9FB5nkVahTT6xqG1bbH8rDbg1qcy89y/exec",
-        {
-          method:"POST",
-          body: JSON.stringify(form),
-        }
-      );
+  evt?.preventDefault();
+
+  if (status === "submitting") return;
+
+  if (!validate()) return;
+
+  setStatus("submitting");
+
+  try {
+
+    const response = await fetch(
+      "https://script.google.com/macros/s/AKfycbzgdRXUv5okBpj9XrB080QnivbbewaFrO0ejrQGnkAKJZJivsgdT5NCYhx-FKhL36Jx/exec",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name,
+          work_email: form.work_email,
+          company_name: form.company_name,
+          industry: form.industry,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+
       setStatus("success");
+
       toast.success(
-        "You're in - we'l be in touch wihin 1-2 business days."
+        "You're in — we'll be in touch within 1 business day."
       );
-      //await axios.post(`${API}/leads`, form);
-      //setStatus("success");
-      //toast.success("You're in — we'll be in touch within 1 business day.");
-    } catch (err) {
-      setStatus("idle");
-      toast.error("Couldn't submit. Please try again.");
-      // eslint-disable-next-line no-console
-      console.error(err);
+
+    } else {
+
+      throw new Error(result.error || "Submission failed");
     }
-  };
+
+  } catch (err) {
+
+    console.error(err);
+
+    setStatus("idle");
+
+    toast.error("Couldn't submit. Please try again.");
+  }
+};
 
   const update = (key) => (e) =>
     setForm((f) => ({ ...f, [key]: e?.target ? e.target.value : e }));
