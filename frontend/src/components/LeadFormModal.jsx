@@ -94,14 +94,24 @@ export const DemoModalProvider = ({ children }) => {
 
     try {
       // ✅ IMPORTANT: Use FormData (MOST STABLE for Apps Script)
-      const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("work_email", form.work_email);
-      formData.append("company_name", form.company_name);
-      formData.append("industry", form.industry);
+      // const formData = new FormData();
+      // formData.append("name", form.name);
+      // formData.append("work_email", form.work_email);
+      // formData.append("company_name", form.company_name);
+      // formData.append("industry", form.industry);
+      const body = new URLSearchParams();
+      body.append("name", form.name);
+      body.append("work_email", form.work_email);
+      body.append("company_name", form.company_name);
+      body.append("industry", form.industry);
+
+await fetch(SCRIPT_URL, {
+  method: "POST",
+  body: body
+});
 
       await fetch(
-        "https://script.google.com/macros/s/AKfycbxzE180u2tCG81ZC3vTuyE_dd0yo2T1v6in0Fzq2nX-G3oG8cJpLCDTJ6K2Pk1Xrk1t/exec",
+        "https://script.google.com/macros/s/AKfycbz2UiBU2TqsmpGcEeDunld2bCRU1qt85PAzJqvbgKJtGclf2iZggfsfstIlhDEvBDUS/exec",
         {
           method: "POST",
           body: formData, // ❌ no headers, no-cors removed
