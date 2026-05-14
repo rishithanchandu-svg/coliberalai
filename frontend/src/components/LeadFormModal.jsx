@@ -93,19 +93,19 @@ export const DemoModalProvider = ({ children }) => {
     setStatus("submitting");
 
     try {
-      const formData = new FormData();
-
-      formData.append("name", form.name);
-      formData.append("work_email", form.work_email);
-      formData.append("company_name", form.company_name);
-      formData.append("industry", form.industry);
-
       await fetch(
         "https://script.google.com/macros/s/AKfycbxzE180u2tCG81ZC3vTuyE_dd0yo2T1v6in0Fzq2nX-G3oG8cJpLCDTJ6K2Pk1Xrk1t/exec",
         {
           method: "POST",
-          mode: "no-cors",
-          body: formData,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: form.name,
+            work_email: form.work_email,
+            company_name: form.company_name,
+            industry: form.industry,
+          }),
         }
       );
 
