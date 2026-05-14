@@ -80,6 +80,7 @@ export const DemoModalProvider = ({ children }) => {
   };
 
   const submit = async (evt) => {
+
   evt?.preventDefault();
 
   if (status === "submitting") return;
@@ -90,10 +91,11 @@ export const DemoModalProvider = ({ children }) => {
 
   try {
 
-    const response = await fetch(
-      "https://script.google.com/macros/s/AKfycbzj7Yd-67vm8ezEGKGqIpxt4ZTsjIOH7YZ1-S6gwHOd_jSeHm-CXvrlFiqb-j-7Y0XY/exec",
+    await fetch(
+      "https://script.google.com/macros/s/AKfycbyp8tyfKBuHjUgvO4QmOQpFfeBKfR02QYaiTlIupqpD7t7oPLGxqiVNw38tk0ip6cAk/exec",
       {
         method: "POST",
+        mode: "no-cors",
         headers: {
           "Content-Type": "application/json",
         },
@@ -106,6 +108,21 @@ export const DemoModalProvider = ({ children }) => {
       }
     );
 
+    setStatus("success");
+
+    toast.success(
+      "You're in — we'll be in touch within 1 business day."
+    );
+
+  } catch (err) {
+
+    console.error(err);
+
+    setStatus("idle");
+
+    toast.error("Couldn't submit. Please try again.");
+  }
+};
     const result = await response.json();
 
     if (result.success) {
