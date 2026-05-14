@@ -101,7 +101,7 @@ export const DemoModalProvider = ({ children }) => {
       formData.append("industry", form.industry);
 
       await fetch(
-        "https://script.google.com/macros/s/AKfycbzoMQK6AVqVSYq_HDPo5mqfA7vIRyk6TrbYjIb-qsO-iuUeuUoNevzDGlE4C-Y8x6VY/exec",
+        "https://script.google.com/macros/s/AKfycbxzE180u2tCG81ZC3vTuyE_dd0yo2T1v6in0Fzq2nX-G3oG8cJpLCDTJ6K2Pk1Xrk1t/exec",
         {
           method: "POST",
           mode: "no-cors",
