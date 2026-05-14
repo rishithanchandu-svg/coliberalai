@@ -94,7 +94,7 @@ export const DemoModalProvider = ({ children }) => {
 
     try {
       await fetch(
-        "https://script.google.com/macros/s/AKfycbxzE180u2tCG81ZC3vTuyE_dd0yo2T1v6in0Fzq2nX-G3oG8cJpLCDTJ6K2Pk1Xrk1t/exec",
+        "https://script.google.com/macros/s/AKfycbyMoH-_LZ42T2G2K3297q0BvwUB4yqeDRomWe30V0RlkYQMNuuo4Cv0ejek4x7PLujF/exec",
         {
           method: "POST",
           headers: {
