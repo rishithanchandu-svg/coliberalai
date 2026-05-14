@@ -91,22 +91,37 @@ export const DemoModalProvider = ({ children }) => {
 
   try {
 
+    const formData = new FormData();
+
+    formData.append("name", form.name);
+    formData.append("work_email", form.work_email);
+    formData.append("company_name", form.company_name);
+    formData.append("industry", form.industry);
+
     await fetch(
       "https://script.google.com/macros/s/AKfycbyp8tyfKBuHjUgvO4QmOQpFfeBKfR02QYaiTlIupqpD7t7oPLGxqiVNw38tk0ip6cAk/exec",
       {
         method: "POST",
         mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: form.name,
-          work_email: form.work_email,
-          company_name: form.company_name,
-          industry: form.industry,
-        }),
+        body: formData,
       }
     );
+
+    setStatus("success");
+
+    toast.success(
+      "You're in — we'll be in touch within 1 business day."
+    );
+
+  } catch (err) {
+
+    console.error(err);
+
+    setStatus("idle");
+
+    toast.error("Couldn't submit. Please try again.");
+  }
+};
 
     setStatus("success");
 
