@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useState } from "react";
-import axios from "axios";
 import {
   Dialog,
   DialogContent,
@@ -19,8 +18,6 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ArrowUpRight, CheckCircle2, Loader2 } from "lucide-react";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-
 const INDUSTRIES = [
   "Coaching & Consulting",
   "Real Estate",
@@ -39,12 +36,14 @@ export const useDemoModal = () => useContext(DemoModalContext);
 export const DemoModalProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState("idle"); // idle | submitting | success
+
   const [form, setForm] = useState({
     name: "",
     work_email: "",
     company_name: "",
     industry: "",
   });
+
   const [errors, setErrors] = useState({});
 
   const open = useCallback(() => {
@@ -54,261 +53,183 @@ export const DemoModalProvider = ({ children }) => {
   }, []);
 
   const reset = () => {
-    setForm({ name: "", work_email: "", company_name: "", industry: "" });
+    setForm({
+      name: "",
+      work_email: "",
+      company_name: "",
+      industry: "",
+    });
     setStatus("idle");
     setErrors({});
   };
 
   const onClose = (next) => {
     setIsOpen(next);
-    if (!next) {
-      // small delay so the fade-out looks clean
-      setTimeout(reset, 200);
-    }
+    if (!next) setTimeout(reset, 200);
   };
 
   const validate = () => {
     const e = {};
+
     if (!form.name.trim()) e.name = "Required";
     if (!form.work_email.trim()) e.work_email = "Required";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.work_email))
       e.work_email = "Invalid email";
+
     if (!form.company_name.trim()) e.company_name = "Required";
     if (!form.industry) e.industry = "Pick one";
+
     setErrors(e);
+
     return Object.keys(e).length === 0;
   };
 
   const submit = async (evt) => {
+    evt.preventDefault();
 
-  evt?.preventDefault();
+    if (status === "submitting") return;
+    if (!validate()) return;
 
-  if (status === "submitting") return;
+    setStatus("submitting");
 
-  if (!validate()) return;
+    try {
+      const formData = new FormData();
 
-  setStatus("submitting");
+      formData.append("name", form.name);
+      formData.append("work_email", form.work_email);
+      formData.append("company_name", form.company_name);
+      formData.append("industry", form.industry);
 
-  try {
-
-    const formData = new FormData();
-
-    formData.append("name", form.name);
-    formData.append("work_email", form.work_email);
-    formData.append("company_name", form.company_name);
-    formData.append("industry", form.industry);
-
-    await fetch(
-      "https://script.google.com/macros/s/AKfycbx-rpOuRA3lhTz3BWGKe5b2h5NERd8DndjndyEVxHLUthluOfPw3npFPabEt5ddpWoI/exec",
-      {
-        method: "POST",
-        mode: "no-cors",
-        body: formData,
-      }
-    );
-
-    setStatus("success");
-
-    toast.success(
-      "You're in — we'll be in touch within 1 business day."
-    );
-
-  } catch (err) {
-
-    console.error(err);
-
-    setStatus("idle");
-
-    toast.error("Couldn't submit. Please try again.");
-  }
-};
-
-    setStatus("success");
-
-    toast.success(
-      "You're in — we'll be in touch within 1 business day."
-    );
-
-  } catch (err) {
-
-    console.error(err);
-
-    setStatus("idle");
-
-    toast.error("Couldn't submit. Please try again.");
-  }
-};
-    const result = await response.json();
-
-    if (result.success) {
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbx-rpOuRA3lhTz3BWGKe5b2h5NERd8DndjndyEVxHLUthluOfPw3npFPabEt5ddpWoI/exec",
+        {
+          method: "POST",
+          mode: "no-cors",
+          body: formData,
+        }
+      );
 
       setStatus("success");
 
-      toast.success(
-        "You're in — we'll be in touch within 1 business day."
-      );
-
-    } else {
-
-      throw new Error(result.error || "Submission failed");
+      toast.success("You're in — we'll be in touch within 1 business day.");
+    } catch (err) {
+      console.error(err);
+      setStatus("idle");
+      toast.error("Couldn't submit. Please try again.");
     }
-
-  } catch (err) {
-
-    console.error(err);
-
-    setStatus("idle");
-
-    toast.error("Couldn't submit. Please try again.");
-  }
-};
+  };
 
   const update = (key) => (e) =>
-    setForm((f) => ({ ...f, [key]: e?.target ? e.target.value : e }));
+    setForm((f) => ({
+      ...f,
+      [key]: e?.target ? e.target.value : e,
+    }));
 
   return (
     <DemoModalContext.Provider value={{ open }}>
       {children}
+
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent
-          data-testid="demo-modal"
-          className="!max-w-[520px] bg-[#F8F7F4] border border-[rgba(26,26,26,0.1)] rounded-3xl p-0 overflow-hidden"
-        >
+        <DialogContent className="!max-w-[520px] bg-[#F8F7F4] rounded-3xl p-0 overflow-hidden">
+
           {status === "success" ? (
-            <div className="p-10 text-center" data-testid="demo-modal-success">
-              <div className="mx-auto w-14 h-14 rounded-full bg-[#D94832]/10 text-[#D94832] flex items-center justify-center mb-6">
+            <div className="p-10 text-center">
+              <div className="mx-auto w-14 h-14 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-6">
                 <CheckCircle2 className="w-7 h-7" />
               </div>
-              <DialogHeader className="space-y-3">
-                <DialogTitle className="font-heading text-3xl font-light text-[#1A1A1A] tracking-tight text-center">
-                  Booked. <span className="italic text-[#D94832]">Thank you.</span>
+
+              <DialogHeader>
+                <DialogTitle className="text-2xl">
+                  Booked. Thank you.
                 </DialogTitle>
-                <DialogDescription className="text-[#5C5C5C] text-base text-center">
-                  We'll reach out within one business day to schedule your live
-                  voice-agent demo — tailored to{" "}
-                  <span className="text-[#1A1A1A]">{form.industry}</span>.
+
+                <DialogDescription>
+                  We'll contact you within one business day.
                 </DialogDescription>
               </DialogHeader>
+
               <button
                 onClick={() => onClose(false)}
-                className="mt-8 btn-secondary !py-3"
-                data-testid="demo-modal-close"
+                className="mt-6 px-4 py-2 bg-black text-white rounded-xl"
               >
                 Close
               </button>
             </div>
           ) : (
-            <form onSubmit={submit} className="p-8 md:p-10">
-              <DialogHeader className="space-y-3 text-left">
-                <div className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#5C5C5C]">
-                  / Book your demo
-                </div>
-                <DialogTitle className="font-heading text-3xl md:text-4xl font-light text-[#1A1A1A] tracking-tight leading-tight">
-                  Tell us about your business.
-                </DialogTitle>
-                <DialogDescription className="text-[#5C5C5C] text-[15px]">
-                  30-second form. We'll reply within one business day with a time
-                  for a live voice demo.
+            <form onSubmit={submit} className="p-8 space-y-4">
+
+              <DialogHeader>
+                <DialogTitle>Tell us about your business</DialogTitle>
+                <DialogDescription>
+                  30-second form — we’ll reach out soon.
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="mt-7 space-y-5">
-                <Field
-                  id="lead-name"
-                  label="Your name"
-                  error={errors.name}
-                  inputProps={{
-                    value: form.name,
-                    onChange: update("name"),
-                    placeholder: "Alex Morgan",
-                    autoComplete: "name",
-                    "data-testid": "lead-name-input",
-                  }}
-                />
-                <Field
-                  id="lead-email"
-                  label="Work email"
-                  error={errors.work_email}
-                  inputProps={{
-                    type: "email",
-                    value: form.work_email,
-                    onChange: update("work_email"),
-                    placeholder: "alex@company.com",
-                    autoComplete: "email",
-                    "data-testid": "lead-email-input",
-                  }}
-                />
-                <Field
-                  id="lead-company"
-                  label="Company name"
-                  error={errors.company_name}
-                  inputProps={{
-                    value: form.company_name,
-                    onChange: update("company_name"),
-                    placeholder: "Acme Coaching",
-                    autoComplete: "organization",
-                    "data-testid": "lead-company-input",
-                  }}
-                />
-                <div>
-                  <Label
-                    htmlFor="lead-industry"
-                    className="eyebrow block mb-2"
-                  >
-                    Industry
-                  </Label>
-                  <Select
-                    value={form.industry}
-                    onValueChange={(v) => update("industry")(v)}
-                  >
-                    <SelectTrigger
-                      id="lead-industry"
-                      data-testid="lead-industry-select"
-                      className="h-12 bg-transparent border border-[rgba(26,26,26,0.2)] rounded-xl px-4 font-body text-[15px] text-[#1A1A1A] focus:ring-[#D94832] focus:border-[#D94832]"
-                    >
-                      <SelectValue placeholder="Pick one" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#F8F7F4] border border-[rgba(26,26,26,0.1)] rounded-xl">
-                      {INDUSTRIES.map((ind) => (
-                        <SelectItem
-                          key={ind}
-                          value={ind}
-                          data-testid={`lead-industry-opt-${ind.replace(/[^a-z]/gi, "-").toLowerCase()}`}
-                          className="font-body text-[15px]"
-                        >
-                          {ind}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.industry && (
-                    <p className="mt-1 text-xs text-[#D94832]">{errors.industry}</p>
-                  )}
-                </div>
+              <Field
+                label="Your name"
+                value={form.name}
+                error={errors.name}
+                onChange={update("name")}
+              />
+
+              <Field
+                label="Work email"
+                value={form.work_email}
+                error={errors.work_email}
+                onChange={update("work_email")}
+              />
+
+              <Field
+                label="Company name"
+                value={form.company_name}
+                error={errors.company_name}
+                onChange={update("company_name")}
+              />
+
+              <div>
+                <Label>Industry</Label>
+
+                <Select
+                  value={form.industry}
+                  onValueChange={update("industry")}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pick one" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {INDUSTRIES.map((i) => (
+                      <SelectItem key={i} value={i}>
+                        {i}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {errors.industry && (
+                  <p className="text-red-500 text-sm">
+                    {errors.industry}
+                  </p>
+                )}
               </div>
 
               <button
                 type="submit"
-                data-testid="lead-submit-button"
                 disabled={status === "submitting"}
-                className="mt-8 btn-primary w-full justify-center disabled:opacity-70"
+                className="w-full bg-black text-white py-3 rounded-xl flex justify-center gap-2"
               >
                 {status === "submitting" ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Submitting…
+                    <Loader2 className="animate-spin w-4 h-4" />
+                    Submitting...
                   </>
                 ) : (
                   <>
-                    Book my demo
+                    Book demo
                     <ArrowUpRight className="w-4 h-4" />
                   </>
                 )}
               </button>
-
-              <p className="mt-4 text-xs text-[#5C5C5C] text-center">
-                By submitting you agree to be contacted about coliberalai. No spam — ever.
-              </p>
             </form>
           )}
         </DialogContent>
@@ -317,19 +238,13 @@ export const DemoModalProvider = ({ children }) => {
   );
 };
 
-const Field = ({ id, label, error, inputProps }) => (
+const Field = ({ label, value, onChange, error }) => (
   <div>
-    <Label htmlFor={id} className="eyebrow block mb-2">
-      {label}
-    </Label>
-    <Input
-      id={id}
-      {...inputProps}
-      className={`h-12 bg-transparent border rounded-xl px-4 font-body text-[15px] text-[#1A1A1A] placeholder:text-[#5C5C5C]/60 focus-visible:ring-1 focus-visible:ring-[#D94832] focus-visible:border-[#D94832] ${
-        error ? "border-[#D94832]" : "border-[rgba(26,26,26,0.2)]"
-      }`}
-    />
-    {error && <p className="mt-1 text-xs text-[#D94832]">{error}</p>}
+    <Label>{label}</Label>
+
+    <Input value={value} onChange={onChange} />
+
+    {error && <p className="text-red-500 text-sm">{error}</p>}
   </div>
 );
 
