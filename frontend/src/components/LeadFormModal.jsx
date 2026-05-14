@@ -93,19 +93,18 @@ export const DemoModalProvider = ({ children }) => {
     setStatus("submitting");
 
     try {
+      // ✅ IMPORTANT: Use FormData (MOST STABLE for Apps Script)
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("work_email", form.work_email);
+      formData.append("company_name", form.company_name);
+      formData.append("industry", form.industry);
+
       await fetch(
-        "https://script.google.com/macros/s/AKfycbyMoH-_LZ42T2G2K3297q0BvwUB4yqeDRomWe30V0RlkYQMNuuo4Cv0ejek4x7PLujF/exec",
+        "https://script.google.com/macros/s/AKfycbxzE180u2tCG81ZC3vTuyE_dd0yo2T1v6in0Fzq2nX-G3oG8cJpLCDTJ6K2Pk1Xrk1t/exec",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: form.name,
-            work_email: form.work_email,
-            company_name: form.company_name,
-            industry: form.industry,
-          }),
+          body: formData, // ❌ no headers, no-cors removed
         }
       );
 
@@ -241,9 +240,7 @@ export const DemoModalProvider = ({ children }) => {
 const Field = ({ label, value, onChange, error }) => (
   <div>
     <Label>{label}</Label>
-
     <Input value={value} onChange={onChange} />
-
     {error && <p className="text-red-500 text-sm">{error}</p>}
   </div>
 );
