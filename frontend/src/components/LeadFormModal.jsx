@@ -18,6 +18,9 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ArrowUpRight, CheckCircle2, Loader2 } from "lucide-react";
 
+const SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbz2UiBU2TqsmpGcEeDunld2bCRU1qt85PAzJqvbgKJtGclf2iZggfsfstIlhDEvBDUS/exec";
+
 const INDUSTRIES = [
   "Coaching & Consulting",
   "Real Estate",
@@ -93,30 +96,18 @@ export const DemoModalProvider = ({ children }) => {
     setStatus("submitting");
 
     try {
-      // ✅ IMPORTANT: Use FormData (MOST STABLE for Apps Script)
-      // const formData = new FormData();
-      // formData.append("name", form.name);
-      // formData.append("work_email", form.work_email);
-      // formData.append("company_name", form.company_name);
-      // formData.append("industry", form.industry);
+      // ✅ ONLY RELIABLE METHOD FOR APPS SCRIPT
       const body = new URLSearchParams();
+
       body.append("name", form.name);
       body.append("work_email", form.work_email);
       body.append("company_name", form.company_name);
       body.append("industry", form.industry);
 
-await fetch(SCRIPT_URL, {
-  method: "POST",
-  body: body
-});
-
-      await fetch(
-        "https://script.google.com/macros/s/AKfycbz2UiBU2TqsmpGcEeDunld2bCRU1qt85PAzJqvbgKJtGclf2iZggfsfstIlhDEvBDUS/exec",
-        {
-          method: "POST",
-          body: formData, // ❌ no headers, no-cors removed
-        }
-      );
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: body,
+      });
 
       setStatus("success");
 
