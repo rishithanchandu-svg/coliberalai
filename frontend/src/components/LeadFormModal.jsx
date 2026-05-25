@@ -106,6 +106,7 @@ export const DemoModalProvider = ({ children }) => {
 
       await fetch(SCRIPT_URL, {
         method: "POST",
+        mode: "no-cors",
         body: body,
       });
 
