@@ -215,3 +215,15 @@ input[type="range"]::-moz-range-thumb {
 @layer base {
     * { border-color: hsl(0 0% 10% / 0.1); }
 }
+215  @layer base {
+216    * { border-color: hsl(0 0% 10% / 0.1); }
+217  }
+218
+219  [class*="emergent"], div[class*="badge"], [id*="emergent"] {
+220    display: none !important;
+221    visibility: hidden !important;
+222    opacity: 0 !important;
+223    pointer-events: none !important;
+224  }
+
+
