@@ -3,10 +3,11 @@ import { Play, Pause } from "lucide-react";
 import { audioURL } from "@/lib/constants";
 
 const SCRIPT_LINES = [
-  { who: "Caller", text: "Hi, I saw your coaching program online — wanted to learn more." },
-  { who: "Ava (AI)", text: "Happy to help. Quick question — are you looking to grow a team, a personal brand, or revenue past $1M?" },
-  { who: "Caller", text: "Revenue. We're around $400K and stuck." },
-  { who: "Ava (AI)", text: "Perfect fit. I have a 20-minute discovery slot Thursday at 3:15pm — I'll text you the link in 10 seconds." },
+  { who: "(AI)", text: "Hello, this is Bluestone Real Estate. How can I help you?" },
+  { who: "Caller", text: "Hello. Hi. I was just looking for some properties near Whitefield area" },
+  { who: "(AI)", text: "Are you looking to buy or rent?" },
+  { who: "Caller", text: "Buy it." },
+  { who: "(AI)", text: "What's your budget for buying in Whitefield?" },
 ];
 
 export const AudioDemo = () => {
