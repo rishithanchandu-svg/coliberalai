@@ -63,8 +63,8 @@ export const AudioDemo = () => {
             Hear what a <span className="italic text-[#D94832]">human-like</span> agent actually sounds like.
           </h2>
           <p className="mt-6 text-[#5C5C5C] text-lg max-w-md">
-            A 30-second sample from a coaching deployment. No robotic tone,
-            no awkward pauses — just fast, warm conversation that closes the booking.
+            A sample from a Real Estate deployment. No robotic tone,
+            no awkward pauses — just fast, warm conversation that handles enquiry.
           </p>
         </div>
 
