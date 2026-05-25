@@ -89,7 +89,7 @@ export const AudioDemo = () => {
                     Demo · Coaching intake call
                   </div>
                   <div className="font-heading text-2xl text-[#1A1A1A] mt-1">
-                    Ava · discovery call booking
+                    Aarohi · discovery call booking
                   </div>
                 </div>
               </div>
